@@ -1,1 +1,0 @@
-﻿# software Management System

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #111827, #1e293b);
+            color: white;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .logo h2 {
+            font-size: 19px;
+        }
+
+        .menu-title {
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin-bottom: 6px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 14px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: rgba(99, 102, 241, 0.25);
+            color: white;
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px 40px;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 27px;
+            color: #111827;
+        }
+
+        .topbar p {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification {
+            width: 42px;
+            height: 42px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* ================= WELCOME ================= */
+
+        .welcome {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 20px;
+            padding: 28px 32px;
+            color: white;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .welcome h2 {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #ddd6fe;
+        }
+
+        .welcome-button {
+            background: white;
+            color: #4f46e5;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .blue {
+            background: #dbeafe;
+        }
+
+        .green {
+            background: #dcfce7;
+        }
+
+        .orange {
+            background: #ffedd5;
+        }
+
+        .purple {
+            background: #ede9fe;
+        }
+
+        .stat-card h3 {
+            margin-top: 18px;
+            font-size: 27px;
+        }
+
+        .stat-card p {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .growth {
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ================= CONTENT GRID ================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+        }
+
+        .view-all {
+            color: #6366f1;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ================= CHART ================= */
+
+        .chart {
+            height: 220px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-top: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .bar-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar {
+            width: 32px;
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 7px 7px 0 0;
+            transition: 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar-container span {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* ================= STUDENTS TABLE ================= */
+
+        .students {
+            margin-top: 22px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 14px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #e0e7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .active-status {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .pending-status {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        /* ================= EVENTS ================= */
+
+        .event {
+            display: flex;
+            gap: 13px;
+            margin-bottom: 20px;
+        }
+
+        .event-date {
+            min-width: 45px;
+            height: 48px;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: #4f46e5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .event-date strong {
+            font-size: 16px;
+        }
+
+        .event-date small {
+            font-size: 9px;
+        }
+
+        .event h4 {
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .event p {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .logo h2,
+            .menu-title,
+            .menu span {
+                display: none;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .menu a {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            .main {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">S</div>
+            <h2>StudentHub</h2>
+        </div>
+
+        <p class="menu-title">Main Menu</p>
+
+        <ul class="menu">
+
+            <li>
+                <a href="#" class="active">
+                    <span class="menu-icon">⌂</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">👨‍🎓</span>
+                    <span>Students</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">📚</span>
+                    <span>Courses</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">📊</span>
+                    <span>Attendance</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">📝</span>
+                    <span>Examinations</span>
+                </a>
+            </li>
+
+            <p class="menu-title">Management</p>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">👨‍🏫</span>
+                    <span>Teachers</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">📅</span>
+                    <span>Schedule</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="menu-icon">⚙</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="logout">
+            <a href="#" class="menu">
+                <a href="#">
+                    <span class="menu-icon">↪</span>
+                    <span>Logout</span>
+                </a>
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's what's happening today.</p>
+            </div>
+
+            <div class="profile">
+
+                <div class="notification">
+                    🔔
+                </div>
+
+                <div class="avatar">
+                    MA
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome">
+
+            <div>
+                <h2>Good Morning, Admin 👋</h2>
+                <p>Manage your students and keep track of academic progress.</p>
+            </div>
+
+            <button class="welcome-button">
+                + Add Student
+            </button>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon blue">
+                        👨‍🎓
+                    </div>
+
+                    <span class="growth">+12.5%</span>
+
+                </div>
+
+                <h3>1,248</h3>
+                <p>Total Students</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon green">
+                        ✓
+                    </div>
+
+                    <span class="growth">+8.2%</span>
+
+                </div>
+
+                <h3>1,105</h3>
+                <p>Active Students</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon orange">
+                        📚
+                    </div>
+
+                    <span class="growth">+4.6%</span>
+
+                </div>
+
+                <h3>36</h3>
+                <p>Total Courses</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon purple">
+                        📈
+                    </div>
+
+                    <span class="growth">+5.1%</span>
+
+                </div>
+
+                <h3>87.4%</h3>
+                <p>Average Performance</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTENT -->
+
+        <section class="content-grid">
+
+            <!-- LEFT -->
+
+            <div>
+
+                <!-- PERFORMANCE -->
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>Student Performance</h3>
+
+                        <a href="#" class="view-all">
+                            This Year ▾
+                        </a>
+                    </div>
+
+                    <div class="chart">
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 45%;"></div>
+                            <span>Jan</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 60%;"></div>
+                            <span>Feb</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 52%;"></div>
+                            <span>Mar</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 70%;"></div>
+                            <span>Apr</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 65%;"></div>
+                            <span>May</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 82%;"></div>
+                            <span>Jun</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 76%;"></div>
+                            <span>Jul</span>
+                        </div>
+
+                        <div class="bar-container">
+                            <div class="bar" style="height: 90%;"></div>
+                            <span>Aug</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RECENT STUDENTS -->
+
+                <div class="card students">
+
+                    <div class="card-header">
+
+                        <h3>Recent Students</h3>
+
+                        <a href="#" class="view-all">
+                            View All
+                        </a>
+
+                    </div>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>ID</th>
+                                <th>Course</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>
+                                    <div class="student-info">
+                                        <div class="student-avatar">AK</div>
+                                        Arjun Kumar
+                                    </div>
+                                </td>
+
+                                <td>ST1024</td>
+                                <td>Computer Science</td>
+
+                                <td>
+                                    <span class="status active-status">
+                                        Active
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    <div class="student-info">
+                                        <div class="student-avatar">PS</div>
+                                        Priya Sharma
+                                    </div>
+                                </td>
+
+                                <td>ST1025</td>
+                                <td>Information Technology</td>
+
+                                <td>
+                                    <span class="status active-status">
+                                        Active
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    <div class="student-info">
+                                        <div class="student-avatar">RM</div>
+                                        Rahul Menon
+                                    </div>
+                                </td>
+
+                                <td>ST1026</td>
+                                <td>Data Science</td>
+
+                                <td>
+                                    <span class="status pending-status">
+                                        Pending
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>Upcoming Events</h3>
+
+                    <a href="#" class="view-all">
+                        View All
+                    </a>
+
+                </div>
+
+
+                <div class="event">
+
+                    <div class="event-date">
+                        <strong>12</strong>
+                        <small>SEP</small>
+                    </div>
+
+                    <div>
+                        <h4>Semester Examination</h4>
+                        <p>Computer Science Department</p>
+                    </div>
+
+                </div>
+
+
+                <div class="event">
+
+                    <div class="event-date">
+                        <strong>18</strong>
+                        <small>SEP</small>
+                    </div>
+
+                    <div>
+                        <h4>Project Submission</h4>
+                        <p>Final year students</p>
+                    </div>
+
+                </div>
+
+
+                <div class="event">
+
+                    <div class="event-date">
+                        <strong>25</strong>
+                        <small>SEP</small>
+                    </div>
+
+                    <div>
+                        <h4>Parent Teacher Meeting</h4>
+                        <p>Main Auditorium</p>
+                    </div>
+
+                </div>
+
+
+                <div class="event">
+
+                    <div class="event-date">
+                        <strong>30</strong>
+                        <small>SEP</small>
+                    </div>
+
+                    <div>
+                        <h4>Academic Review</h4>
+                        <p>Administration Block</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
